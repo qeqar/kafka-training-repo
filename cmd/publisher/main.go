@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/Shopify/sarama"
 	"log"
-	"os"
 )
 
 const (
@@ -22,18 +21,17 @@ func main() {
 	producer, err := sarama.NewSyncProducer([]string{brokers}, config)
 	if err != nil {
 		log.Panicf("Error creating Producer %v", err)
-		os.Exit(1)
 	}
 
 	msg := &sarama.ProducerMessage {
         Topic: topic,
         Value: sarama.StringEncoder(message),
     }
-    p, o, err := producer.SendMessage(msg)
+    partition, offset, err := producer.SendMessage(msg)
     if err != nil {
         fmt.Println("Error publish: ", err.Error())
     }
 
-    fmt.Println("Partition: ", p)
-    fmt.Println("Offset: ", o)
+    fmt.Println("Partition: ", partition)
+    fmt.Println("Offset: ", offset)
 }
